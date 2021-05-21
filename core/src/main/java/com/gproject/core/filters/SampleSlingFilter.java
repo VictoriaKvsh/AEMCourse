@@ -1,8 +1,6 @@
 package com.gproject.core.filters;
 
 
-import com.day.cq.commons.ImageResource;
-import com.day.cq.wcm.foundation.Image;
 import com.gproject.core.service.imp.ImgRender;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
