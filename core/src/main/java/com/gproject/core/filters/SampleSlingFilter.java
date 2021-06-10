@@ -1,36 +1,29 @@
 package com.gproject.core.filters;
 
 
-import com.gproject.core.service.imp.ImgRender;
-import org.apache.sling.api.SlingHttpServletRequest;
-import org.apache.sling.api.SlingHttpServletResponse;
-import org.apache.sling.api.resource.Resource;
+
+import com.adobe.acs.commons.util.ServletOutputStreamWrapper;
+import com.day.image.Layer;
+import com.gproject.core.service.impl.ImgRender;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.sling.servlets.annotations.SlingServletFilter;
 import org.apache.sling.servlets.annotations.SlingServletFilterScope;
+
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.propertytypes.ServiceDescription;
-import org.osgi.service.component.propertytypes.ServiceRanking;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import javax.jcr.RepositoryException;
+
 import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
 
-
-
-@Component(service = Filter.class)
-@SlingServletFilter(scope = {SlingServletFilterScope.COMPONENT},
-        pattern = "/content/we-retail/fr/fr.*")
-@ServiceRanking(500)
-@ServiceDescription("Filter incoming img")
+@Component(service = Filter.class, property = {"service.ranking=-500"})
+@SlingServletFilter(scope = {SlingServletFilterScope.REQUEST}, pattern = "/content/we-retail/de/de.*",
+        extensions = {"jpg", "jpeg", "png"})
 public class SampleSlingFilter implements Filter {
-
-    private static final Logger log = LoggerFactory.getLogger(SampleSlingFilter.class.getName());
 
     @Reference
     ImgRender imgRender;
@@ -38,47 +31,47 @@ public class SampleSlingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        SlingHttpServletResponse slingResponse = (SlingHttpServletResponse) response;
-        SlingHttpServletRequest slingRequest = (SlingHttpServletRequest) request;
-        ImgResponseWrapper wrapper = new ImgResponseWrapper(slingResponse);
+        ImgResponseWrapper wrapper = new ImgResponseWrapper((HttpServletResponse) response);
 
-        final Resource resource = slingRequest.getResource();
-
-        // to proceed with the rest of the Filter chain
         chain.doFilter(request, wrapper);
+        final Layer layer = imgRender.getLayer(wrapper.getBytes());
 
-        try {
-            imgRender.getLayer(resource);
-        } catch (RepositoryException e) {
-            e.printStackTrace();
+        if (layer != null) {
+            layer.write(layer.getMimeType(), 1.0, response.getOutputStream());
+            response.flushBuffer();
         }
-
-
     }
-
 
     @Override
     public void destroy() {
-
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Deactivate
     protected void deactivate(ComponentContext ctx) {
-
     }
 
 
     class ImgResponseWrapper extends HttpServletResponseWrapper {
 
+        private ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
         public ImgResponseWrapper(HttpServletResponse response) {
             super(response);
         }
 
+        @Override
+        public ServletOutputStream getOutputStream() throws IOException {
+            return new ServletOutputStreamWrapper(bos);
+        }
 
+        public byte[] getBytes() {
+            return bos.toByteArray();
+        }
     }
+
+
 }

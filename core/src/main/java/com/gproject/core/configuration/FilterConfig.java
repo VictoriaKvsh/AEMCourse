@@ -12,5 +12,5 @@ public @interface FilterConfig {
     @AttributeDefinition(
             name = "Run Modes",
             type = AttributeType.STRING)
-    String runMode() default "mode1";
+    String runMode() default "mode0";
 }
