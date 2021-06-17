@@ -2,6 +2,7 @@ package com.gproject.core.listeners;
 
 import com.day.cq.commons.jcr.JcrUtil;
 import com.gproject.core.utils.ResolverUtil;
+import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.event.jobs.Job;
@@ -14,39 +15,34 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-@Component(service = JobConsumer.class,
-        immediate = true,
+@Component(immediate = true,
         property = {
-                JobConsumer.PROPERTY_TOPICS + "=task/job"
+                JobConsumer.PROPERTY_TOPICS + "=" + JobEventHandler.JOB_CONSUMER_TOPIC
         })
 public class TaskJobConsumer implements JobConsumer {
-
+    private static final String PATH_TO_ADD = "/var/log/removedProperties/deletedNode";
     private static final Logger LOG = LoggerFactory.getLogger(TaskJobConsumer.class);
+    private static final String PROPERTY_PATH = "propertyPath";
+    private static final String PROPERTY_NAME = "propertyName";
+    private static final String INTERMEDIATE_NODE_TYPE = "sling:Folder";
+    private static final String NEW_NODE_TYPE = "nt:unstructured";
+
 
     @Reference
-    ResourceResolverFactory resourceResolverFactory;
+    private ResourceResolverFactory resourceResolverFactory;
 
     @Override
     public JobResult process(Job job) {
-        try (ResourceResolver resourceResolver = ResolverUtil.newResolver(resourceResolverFactory)){
-
+        try (ResourceResolver resourceResolver = ResolverUtil.newResolver(resourceResolverFactory)) {
             Session session = resourceResolver.adaptTo(Session.class);
+            String deletedNodePath = (String) job.getProperty(SlingConstants.PROPERTY_PATH);
+            Node newNode = JcrUtil.createPath(PATH_TO_ADD, true, INTERMEDIATE_NODE_TYPE, NEW_NODE_TYPE, session, false);
+            newNode.setProperty(PROPERTY_PATH, deletedNodePath);
 
-            String propertyPath = (String) job.getProperty("path");
-
-            String newPath = "/var/log/removedProperties/deletedNode";
-
-            Node feedNode = JcrUtil.createPath(newPath, true, "sling:OrderedFolder", "cq:Page", session, false);
-            Node dataNode = feedNode.addNode("jcr:content", "cq:PageContent");
-            dataNode.setProperty("propertyPath",propertyPath);
-            dataNode.setProperty("propertyName",propertyPath.substring(66));
-
+            newNode.setProperty(PROPERTY_NAME, deletedNodePath);
 
             session.save();
-
-
-
-            LOG.info("\n Job executing for  : {} ", propertyPath);
+            LOG.info("\n Job executing for  : {} ", deletedNodePath);
             return JobResult.OK;
         } catch (Exception e) {
             LOG.info("\n Error in Job Consumer : {}  ", e.getMessage());

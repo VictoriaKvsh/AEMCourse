@@ -1,19 +1,15 @@
 package com.gproject.core.filters;
 
-
-
 import com.adobe.acs.commons.util.ServletOutputStreamWrapper;
 import com.day.image.Layer;
-import com.gproject.core.service.impl.ImgRender;
+import com.gproject.core.service.impl.ImageTransform;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.sling.servlets.annotations.SlingServletFilter;
 import org.apache.sling.servlets.annotations.SlingServletFilterScope;
-
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
@@ -23,19 +19,16 @@ import java.io.IOException;
 @Component(service = Filter.class, property = {"service.ranking=-500"})
 @SlingServletFilter(scope = {SlingServletFilterScope.REQUEST}, pattern = "/content/we-retail/de/de.*",
         extensions = {"jpg", "jpeg", "png"})
-public class SampleSlingFilter implements Filter {
+public class ImageTransformFilter implements Filter {
 
     @Reference
-    ImgRender imgRender;
+    ImageTransform imageTransform;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         ImgResponseWrapper wrapper = new ImgResponseWrapper((HttpServletResponse) response);
-
         chain.doFilter(request, wrapper);
-        final Layer layer = imgRender.getLayer(wrapper.getBytes());
-
+        final Layer layer = imageTransform.getLayer(wrapper.getBytes());
         if (layer != null) {
             layer.write(layer.getMimeType(), 1.0, response.getOutputStream());
             response.flushBuffer();
@@ -53,7 +46,6 @@ public class SampleSlingFilter implements Filter {
     @Deactivate
     protected void deactivate(ComponentContext ctx) {
     }
-
 
     class ImgResponseWrapper extends HttpServletResponseWrapper {
 

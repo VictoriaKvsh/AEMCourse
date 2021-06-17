@@ -15,8 +15,10 @@
  */
 package com.gproject.core.listeners;
 
+import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 import com.gproject.core.utils.ResolverUtil;
+import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.observation.ResourceChange;
@@ -25,27 +27,32 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.VersionManager;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(
-        immediate = true,
-        service = ResourceChangeListener.class,
-        property = {
-                ResourceChangeListener.PATHS + "=/content/gproject/us/en/test11",
-                ResourceChangeListener.CHANGES + "=ADDED",
-                ResourceChangeListener.CHANGES + "=CHANGED"
-        }
-)
+//@Component(
+//        immediate = true,
+//        service = ResourceChangeListener.class,
+//        property = {
+//                ResourceChangeListener.PATHS + "=/content/gproject/us/en",
+//                ResourceChangeListener.CHANGES + "=ADDED",
+//                ResourceChangeListener.CHANGES + "=CHANGED"
+//        }
+//)
 public class ResourceEventHandler implements ResourceChangeListener {
-
+    private static final String PAGE_CONTENT_TYPE = "cq:PageContent";
+    private static final String JCR_DESCRIPTION_PROPERTY = "jcr:description";
     private static final Logger LOG = LoggerFactory.getLogger(ResourceEventHandler.class);
+    private static final String MIXIN_TYPE = "jcr:mixinTypes";
+    private static final String MIXIN_NAME = "mix:versionable";
+
 
     @Reference
     ResourceResolverFactory resourceResolverFactory;
@@ -54,33 +61,40 @@ public class ResourceEventHandler implements ResourceChangeListener {
     public void onChange(List<ResourceChange> list) {
         for (ResourceChange resourceChange : list) {
             try (ResourceResolver resourceResolver = ResolverUtil.newResolver(resourceResolverFactory)) {
+                LOG.info("\n Event : {} , Resource : {} ", resourceChange.getType(), resourceChange.getPath());
                 Session session = resourceResolver.adaptTo(Session.class);
+                PageManager pageManager = resourceResolver.adaptTo(PageManager.class);
                 Node node = session.getNode(resourceChange.getPath());
-                boolean isContainer = resourceChange.getPath().contains("container");
 
                 String primaryType = node.getProperty("jcr:primaryType").getString();
+                LOG.info("\n primaryType 11111111" + primaryType);
 
-                String description = null;
-                description =  node.getProperty("jcr:description").getString();
+                if (primaryType.equals(PAGE_CONTENT_TYPE) && node.hasProperty(JCR_DESCRIPTION_PROPERTY)) {
 
-
-                LOG.info("\n primaryType 11111111" + primaryType + "description!!!!!" + description);
-
-
-                if (primaryType.equals("cq:PageContent") && description != null) {
-
-
-                    if (!node.hasProperty("mix:versionable")) {
-                        node.addMixin("mix:versionable");
+                    if (!node.hasProperty(MIXIN_TYPE)) {
+                        node.addMixin(MIXIN_NAME);
+                        session.save();
                     }
-
-                    VersionManager vm = session.getWorkspace().getVersionManager();
-                    vm.checkout(resourceChange.getPath());
-                    session.save();
-                    vm.checkin(resourceChange.getPath());
-
-                    LOG.info("\n Property 11111111" + primaryType + "11111111111111" + "\n Property 11111111" + description + "11111111111111");
                 }
+
+                if (!primaryType.equals(PAGE_CONTENT_TYPE)) {
+                    Optional.ofNullable(pageManager.getContainingPage(resourceChange.getPath()))
+                            .map(Page::getContentResource)
+                            .map(Resource::getPath)
+                            .ifPresent(path -> { // переменная Path
+
+                                try {
+                                    VersionManager vm = null;
+                                    vm = session.getWorkspace().getVersionManager();
+                                    vm.checkin(path);
+                                    session.logout();
+                                } catch (RepositoryException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                }
+                LOG.info("\n Property 11111111" + primaryType + "1111111111111111111111111111");
+
             } catch (Exception e) {
                 LOG.info("\n Exception : {} ", e.getMessage());
             }
