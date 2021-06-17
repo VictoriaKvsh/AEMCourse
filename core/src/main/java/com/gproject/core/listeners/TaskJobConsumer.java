@@ -22,8 +22,8 @@ import javax.jcr.Session;
 public class TaskJobConsumer implements JobConsumer {
     private static final String PATH_TO_ADD = "/var/log/removedProperties/deletedNode";
     private static final Logger LOG = LoggerFactory.getLogger(TaskJobConsumer.class);
-    private static final String PROPERTY_PATH = "propertyPath";
-    private static final String PROPERTY_NAME = "propertyName";
+    private static final String DELETED_NODE_PROPERTY_PATH = "propertyPath";
+    private static final String DELETED_NODE_PROPERTY_NAME = "propertyName";
     private static final String INTERMEDIATE_NODE_TYPE = "sling:Folder";
     private static final String NEW_NODE_TYPE = "nt:unstructured";
 
@@ -37,9 +37,8 @@ public class TaskJobConsumer implements JobConsumer {
             Session session = resourceResolver.adaptTo(Session.class);
             String deletedNodePath = (String) job.getProperty(SlingConstants.PROPERTY_PATH);
             Node newNode = JcrUtil.createPath(PATH_TO_ADD, true, INTERMEDIATE_NODE_TYPE, NEW_NODE_TYPE, session, false);
-            newNode.setProperty(PROPERTY_PATH, deletedNodePath);
-
-            newNode.setProperty(PROPERTY_NAME, deletedNodePath);
+            newNode.setProperty(DELETED_NODE_PROPERTY_PATH, deletedNodePath);
+            newNode.setProperty(DELETED_NODE_PROPERTY_NAME, deletedNodePath.substring(deletedNodePath.indexOf("jcr:content")+12));
 
             session.save();
             LOG.info("\n Job executing for  : {} ", deletedNodePath);

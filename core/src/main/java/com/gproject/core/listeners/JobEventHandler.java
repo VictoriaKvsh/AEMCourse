@@ -53,7 +53,6 @@ public class JobEventHandler implements EventListener {
     public void onEvent(EventIterator eventIterator) {
         try {
             while (eventIterator.hasNext()) {
-
                 Map<String, Object> jobProperties = new HashMap<>();
                 jobProperties.put(SlingConstants.PROPERTY_PATH, eventIterator.nextEvent().getPath());
                 jobManager.addJob(JOB_CONSUMER_TOPIC, jobProperties);
