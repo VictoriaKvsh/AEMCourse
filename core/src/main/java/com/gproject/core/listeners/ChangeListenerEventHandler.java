@@ -23,7 +23,6 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.apache.sling.api.resource.observation.ResourceChange;
 import org.apache.sling.api.resource.observation.ResourceChangeListener;
-import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 import javax.jcr.Node;
@@ -46,13 +45,12 @@ import org.slf4j.LoggerFactory;
 //                ResourceChangeListener.CHANGES + "=CHANGED"
 //        }
 //)
-public class ResourceEventHandler implements ResourceChangeListener {
+public class ChangeListenerEventHandler implements ResourceChangeListener {
     private static final String PAGE_CONTENT_TYPE = "cq:PageContent";
     private static final String JCR_DESCRIPTION_PROPERTY = "jcr:description";
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceEventHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChangeListenerEventHandler.class);
     private static final String MIXIN_TYPE = "jcr:mixinTypes";
     private static final String MIXIN_NAME = "mix:versionable";
-
 
     @Reference
     ResourceResolverFactory resourceResolverFactory;

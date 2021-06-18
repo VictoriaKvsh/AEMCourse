@@ -2,7 +2,6 @@ package com.gproject.core.listeners;
 
 import com.gproject.core.utils.ResolverUtil;
 import org.apache.sling.api.SlingConstants;
-import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
 import org.osgi.service.component.annotations.Component;
@@ -23,11 +22,14 @@ import javax.jcr.version.VersionManager;
                 EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/CHANGED",
                 EventConstants.EVENT_FILTER + "=(path=/content/gproject/us/en*)"
         })
-public class OSGiEventHandler implements EventHandler {
+public class PageResourseEventHandler implements EventHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OSGiEventHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PageResourseEventHandler.class);
     private static final String PAGE_CONTENT_TYPE = "cq:PageContent";
     private static final String JCR_DESCRIPTION_PROPERTY = "jcr:description";
+    private static final String MIXIN_TYPE = "jcr:mixinTypes";
+    private static final String MIXIN_NAME = "mix:versionable";
+    private static final String NODE_PRIMARY_TYPE = "jcr:primaryType";
 
     @Reference
     ResourceResolverFactory resourceResolverFactory;
@@ -38,11 +40,11 @@ public class OSGiEventHandler implements EventHandler {
             Session session = resourceResolver.adaptTo(Session.class);
             String propertyPath = event.getProperty(SlingConstants.PROPERTY_PATH).toString();
             Node node = session.getNode(propertyPath);
-            String primaryType = node.getProperty("jcr:primaryType").getString();
+            String primaryType = node.getProperty(NODE_PRIMARY_TYPE).getString();
 
             if (primaryType.equals(PAGE_CONTENT_TYPE)) {
-                if (!node.hasProperty("mix:versionable")) {
-                    node.addMixin("mix:versionable");
+                if (!node.hasProperty(MIXIN_TYPE)) {
+                    node.addMixin(MIXIN_NAME);
                     session.save();
                 }
                 VersionManager vm = session.getWorkspace().getVersionManager();
