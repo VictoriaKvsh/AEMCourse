@@ -42,7 +42,7 @@ public class PageResourseEventHandler implements EventHandler {
             Node node = session.getNode(propertyPath);
             String primaryType = node.getProperty(NODE_PRIMARY_TYPE).getString();
 
-            if (primaryType.equals(PAGE_CONTENT_TYPE)) {
+            if (primaryType.equals(PAGE_CONTENT_TYPE) && node.hasProperty(JCR_DESCRIPTION_PROPERTY)) {
                 if (!node.hasProperty(MIXIN_TYPE)) {
                     node.addMixin(MIXIN_NAME);
                     session.save();
