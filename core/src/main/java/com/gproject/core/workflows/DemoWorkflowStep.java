@@ -5,8 +5,6 @@ import com.adobe.granite.workflow.exec.WorkItem;
 import com.adobe.granite.workflow.exec.WorkflowData;
 import com.adobe.granite.workflow.exec.WorkflowProcess;
 import com.adobe.granite.workflow.metadata.MetaDataMap;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
@@ -14,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-import java.util.Iterator;
-import java.util.Set;
 
 
 @Component(
@@ -25,8 +21,8 @@ import java.util.Set;
                 Constants.SERVICE_DESCRIPTION + " = Custom geeks workflow step."
         }
 )
-public class TaskWorkflowStep implements WorkflowProcess {
-    private static final Logger LOG = LoggerFactory.getLogger(TaskWorkflowStep.class);
+public class DemoWorkflowStep implements WorkflowProcess {
+    private static final Logger LOG = LoggerFactory.getLogger(DemoWorkflowStep.class);
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {

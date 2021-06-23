@@ -17,12 +17,12 @@ import javax.jcr.Session;
 @Component(
         immediate = true,
         property = {
-                "process.label" + "=Task Workflow Process",
+                "process.label" + "=Path Exist Workflow Process",
                 Constants.SERVICE_DESCRIPTION + "=Custom task workflow process."
         }
 )
-public class TaskWorkflowProcess implements WorkflowProcess {
-    private static final Logger LOG = LoggerFactory.getLogger(TaskWorkflowProcess.class);
+public class PathExistWorkflowProcess implements WorkflowProcess {
+    private static final Logger LOG = LoggerFactory.getLogger(PathExistWorkflowProcess.class);
     private static final String TO_MOVE = "Vika Stay Strong!";
     private static final String PATH = "pathToMove";
 
