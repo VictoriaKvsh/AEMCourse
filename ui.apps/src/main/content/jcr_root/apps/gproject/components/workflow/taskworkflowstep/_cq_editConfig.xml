@@ -6,7 +6,7 @@
             jcr:description="Task custom workflow step."
             jcr:primaryType="nt:unstructured"
             jcr:title="Task Workflow Step"
-            PROCESS="com.gproject.core.workflows.TaskWorkflowStep"
+            PROCESS="com.gproject.core.workflows.DemoWorkflowStep"
             PROCESS_AUTO_ADVANCE="true"/>
     <cq:listeners
             jcr:primaryType="cq:EditListenersConfig"

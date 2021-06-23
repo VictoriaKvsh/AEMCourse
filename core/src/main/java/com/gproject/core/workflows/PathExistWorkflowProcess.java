@@ -23,8 +23,7 @@ import javax.jcr.Session;
 )
 public class PathExistWorkflowProcess implements WorkflowProcess {
     private static final Logger LOG = LoggerFactory.getLogger(PathExistWorkflowProcess.class);
-    private static final String TO_MOVE = "Vika Stay Strong!";
-    private static final String PATH = "pathToMove";
+    public static final String PATH_TO_MOVE_PROPERTY = "pathToMove";
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {
@@ -36,11 +35,8 @@ public class PathExistWorkflowProcess implements WorkflowProcess {
                 String path = workflowData.getPayload().toString() + "/jcr:content";
                 Node node = (Node) session.getItem(path);
 
-                if(workflowData.getMetaDataMap().containsKey(PATH)) {
-                    String processArgs = processArguments.get("PROCESS_ARGS", "string").toString();
-                    node.setProperty(TO_MOVE, processArgs);
+                if (node.hasProperty(PATH_TO_MOVE_PROPERTY)) {
 
-                    session.save();
                 }
 
 
