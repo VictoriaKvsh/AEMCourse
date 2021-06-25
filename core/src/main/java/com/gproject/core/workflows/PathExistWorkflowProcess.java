@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
+import java.util.Iterator;
+import java.util.Set;
 
 
 @Component(
@@ -24,6 +26,9 @@ import javax.jcr.Session;
 public class PathExistWorkflowProcess implements WorkflowProcess {
     private static final Logger LOG = LoggerFactory.getLogger(PathExistWorkflowProcess.class);
     public static final String PATH_TO_MOVE_PROPERTY = "pathToMove";
+    public static final String PATH_PROPERTY = "path";
+    public static final String PATH_PROPERTY_DEFINED = "defined";
+    public static final String PATH_PROPERTY_NOT_DEFINED = "notDefined";
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {
@@ -34,16 +39,18 @@ public class PathExistWorkflowProcess implements WorkflowProcess {
                 Session session = workflowSession.adaptTo(Session.class);
                 String path = workflowData.getPayload().toString() + "/jcr:content";
                 Node node = (Node) session.getItem(path);
-
                 if (node.hasProperty(PATH_TO_MOVE_PROPERTY)) {
-
+                    workItem.getWorkflowData().getMetaDataMap().put(PATH_PROPERTY, PATH_PROPERTY_DEFINED);
+                } else {
+                    workItem.getWorkflowData().getMetaDataMap().put(PATH_PROPERTY, PATH_PROPERTY_NOT_DEFINED);
                 }
-
-
-                  //   workItem .getWorkflowData().getPayload();
             }
         } catch (Exception e) {
             LOG.info("\n ERROR {} ", e.getMessage());
         }
+
+
     }
+
+
 }
