@@ -43,6 +43,7 @@ public class PathExistWorkflowProcess implements WorkflowProcess {
                     workItem.getWorkflowData().getMetaDataMap().put(PATH_PROPERTY, PATH_PROPERTY_DEFINED);
                 } else {
                     workItem.getWorkflowData().getMetaDataMap().put(PATH_PROPERTY, PATH_PROPERTY_NOT_DEFINED);
+
                 }
             }
         } catch (Exception e) {

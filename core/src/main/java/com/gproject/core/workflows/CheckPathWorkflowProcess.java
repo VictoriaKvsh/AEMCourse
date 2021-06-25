@@ -14,8 +14,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.sling.api.resource.path.Path;
-
 @Component(
         immediate = true,
         property = {
@@ -28,7 +26,6 @@ public class CheckPathWorkflowProcess implements WorkflowProcess {
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {
-        LOG.info("\n ====================================Custom Workflow Process========================================");
         try {
             WorkflowData workflowData = workItem.getWorkflowData();
             if (workflowData.getPayloadType().equals("JCR_PATH")) {
