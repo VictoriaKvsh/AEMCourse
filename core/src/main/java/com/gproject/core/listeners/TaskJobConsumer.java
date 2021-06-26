@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-//@Component(immediate = true,
-//        property = {
-//                JobConsumer.PROPERTY_TOPICS + "=" + JobEventHandler.JOB_CONSUMER_TOPIC
-//        })
+@Component(immediate = true,
+        property = {
+                JobConsumer.PROPERTY_TOPICS + "=" + JobEventHandler.JOB_CONSUMER_TOPIC
+        })
 public class TaskJobConsumer implements JobConsumer {
     private static final String PATH_TO_ADD = "/var/log/removedProperties/deletedNode";
     private static final Logger LOG = LoggerFactory.getLogger(TaskJobConsumer.class);

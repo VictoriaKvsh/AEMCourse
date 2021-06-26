@@ -22,7 +22,7 @@ import java.io.IOException;
 public class ImageTransformFilter implements Filter {
 
     @Reference
-    ImageTransform imageTransform;
+    private ImageTransform imageTransform;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

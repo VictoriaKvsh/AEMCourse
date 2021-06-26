@@ -48,6 +48,8 @@ public class CheckPathWorkflowProcess implements WorkflowProcess {
     public static boolean isValidPath(String path, Session session) {
         try {
             session.getNode(path);
+       //     session.itemExists()
+       //     session.nodeExists();
         } catch (RepositoryException ex) {
             return false;
         }
