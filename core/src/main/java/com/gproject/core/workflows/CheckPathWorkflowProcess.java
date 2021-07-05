@@ -23,19 +23,22 @@ import javax.jcr.Session;
 )
 public class CheckPathWorkflowProcess implements WorkflowProcess {
     private static final Logger LOG = LoggerFactory.getLogger(CheckPathWorkflowProcess.class);
+    public static final String JCR_PATH = "JCR_PATH";
+    public static final String JCR_CONTENT = "/jcr:content";
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {
         try {
             WorkflowData workflowData = workItem.getWorkflowData();
-            if (workflowData.getPayloadType().equals("JCR_PATH")) {
+            if (workflowData.getPayloadType().equals(JCR_PATH)) {
                 Session session = workflowSession.adaptTo(Session.class);
                 String pageNodePath = workflowData.getPayload().toString();
-                Node node = (Node) session.getItem(pageNodePath + "/jcr:content");
+                Node node = (Node) session.getItem(pageNodePath + JCR_CONTENT);
                 if (node.hasProperty(PathExistWorkflowProcess.PATH_TO_MOVE_PROPERTY)) {
                     String pathToMoveProperty = node.getProperty(PathExistWorkflowProcess.PATH_TO_MOVE_PROPERTY).getString();
                     if (isValidPath(pathToMoveProperty, session) && !pathToMoveProperty.equals(pageNodePath)) {
-                        session.move(pageNodePath, pathToMoveProperty);
+                        String nodeName = "/"+node.getProperty("jcr:title").getString();
+                        session.move(pageNodePath, pathToMoveProperty+nodeName);
                         session.save();
                     }
                 }
@@ -47,12 +50,10 @@ public class CheckPathWorkflowProcess implements WorkflowProcess {
 
     public static boolean isValidPath(String path, Session session) {
         try {
-            session.getNode(path);
-       //     session.itemExists()
-       //     session.nodeExists();
-        } catch (RepositoryException ex) {
+            return session.nodeExists(path);
+        } catch (RepositoryException e) {
+            e.printStackTrace();
             return false;
         }
-        return true;
     }
 }
