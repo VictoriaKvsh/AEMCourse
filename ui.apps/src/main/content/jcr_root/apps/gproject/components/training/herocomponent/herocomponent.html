@@ -1,4 +1,4 @@
-<sly data-sly-use.heroImage="com.gproject.core.models.impl.HeroImage">
+<sly data-sly-use.heroImage="com.gproject.core.models.HeroImage">
     <div class="${heroImage.classList} jumbotron"
          style="background-image: url('${(properties.fileReference || properties.fileName) ? heroImage.image.src : '' @ context='uri'}');">
         <div class="container cq-dd-image">
