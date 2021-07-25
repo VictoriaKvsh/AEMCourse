@@ -1,0 +1,6 @@
+<h1>Grig Parsys</h1>
+<div data-sly-use.gridParsys="com.gproject.core.models.GridParsys">
+    <div data-sly-list.item="${gridParsys.rowsNumber}">
+        <sly data-sly-resource="${'{0}{1}' @format=['par_',itemList.count], resourceType='foundation/components/parsys'}"></sly>
+    </div>
+</div>

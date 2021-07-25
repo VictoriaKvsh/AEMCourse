@@ -46,10 +46,8 @@ public class FullTextSearchImp implements FullTextSearch {
     @OSGiService(filter = "(component.name=QOM)")
     SearchService searchServiceQOM;
 
-
     @PostConstruct
     public void result() throws RepositoryException {
-
         if (searchapi.equals("qb")) {
             result = searchServiceQB.searchResult(paths, text, slingHttpServletRequest);
         } else
@@ -58,9 +56,7 @@ public class FullTextSearchImp implements FullTextSearch {
 
     @Override
     public List<String> getPaths() {
-
-            return paths;
-
+        return paths;
     }
 
     @Override

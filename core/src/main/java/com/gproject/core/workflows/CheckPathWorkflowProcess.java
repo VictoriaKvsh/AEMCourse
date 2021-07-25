@@ -25,6 +25,7 @@ public class CheckPathWorkflowProcess implements WorkflowProcess {
     private static final Logger LOG = LoggerFactory.getLogger(CheckPathWorkflowProcess.class);
     public static final String JCR_PATH = "JCR_PATH";
     public static final String JCR_CONTENT = "/jcr:content";
+    public static final String JCR_TITLE_PROPERTY = "jcr:title";
 
     @Override
     public void execute(WorkItem workItem, WorkflowSession workflowSession, MetaDataMap processArguments) {
@@ -37,7 +38,7 @@ public class CheckPathWorkflowProcess implements WorkflowProcess {
                 if (node.hasProperty(PathExistWorkflowProcess.PATH_TO_MOVE_PROPERTY)) {
                     String pathToMoveProperty = node.getProperty(PathExistWorkflowProcess.PATH_TO_MOVE_PROPERTY).getString();
                     if (isValidPath(pathToMoveProperty, session) && !pathToMoveProperty.equals(pageNodePath)) {
-                        String nodeName = "/"+node.getProperty("jcr:title").getString();
+                        String nodeName = "/"+node.getProperty(JCR_TITLE_PROPERTY).getString();
                         session.move(pageNodePath, pathToMoveProperty+nodeName);
                         session.save();
                     }
