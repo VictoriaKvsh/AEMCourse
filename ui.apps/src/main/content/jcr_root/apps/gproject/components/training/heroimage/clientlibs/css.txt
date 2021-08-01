@@ -1,1 +1,2 @@
-less/hero-image.less
+#base=css
+hero-image.css

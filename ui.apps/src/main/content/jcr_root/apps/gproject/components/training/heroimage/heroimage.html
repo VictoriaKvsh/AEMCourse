@@ -1,15 +1,14 @@
+<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html">
+    <sly data-sly-call="${clientlib.css @ categories='gproject.training'}"/>
+</sly>
 <sly data-sly-use.heroImage="com.gproject.core.models.HeroImage">
-    <div class="${heroImage.classList} jumbotron"
-         style="background-image: url('${(properties.fileReference || properties.fileName) ? heroImage.image.src : '' @ context='uri'}');">
-        <div class="container cq-dd-image">
-            <div class="we-HeroImage-wrapper">
-                <p class="h3">${properties.heading}</p>
-                <strong class="we-HeroImage-title h1">${properties.title || currentPage.title}</strong>
-
-                <p data-sly-test="${properties.buttonLabel && properties.buttonLinkTo}">
-                    <a class="btn btn-primary btn-action" href="${properties.buttonLinkTo @ extension = 'html'}" role="button">${properties.buttonLabel}</a>
-                </p>
-            </div>
+    <div class="card">
+        <div class="card-block" style="content: url('${(properties.fileReference || properties.fileName) ? heroImage.image.src : '' @ context='uri'}');"></div>
+        <div class="card-block">
+            <p class="h1">${properties.title || currentPage.title}</p>
+            <p class="h3">${properties.text @context='html'}</p>
+            <p> <a href="${properties.buttonLinkTo @ extension = 'html'}" role="button">${properties.buttonLinkTo}</a>
+            </p>
         </div>
     </div>
 </sly>
