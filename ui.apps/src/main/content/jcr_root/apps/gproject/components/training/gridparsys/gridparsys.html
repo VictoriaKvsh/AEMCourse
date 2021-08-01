@@ -1,0 +1,13 @@
+<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html">
+    <sly data-sly-call="${clientlib.css @ categories='gproject.training'}"/>
+</sly>
+<div data-sly-use.gridParsys="com.gproject.core.models.GridParsys">
+    <h1>Grig Parsys</h1>
+    <sly data-sly-list.row="${gridParsys.rowsNumber}">
+        <div class="row">
+            <sly data-sly-list.column="${gridParsys.colNumber}">
+                <div class="col" data-sly-resource="${'{0}{1}{2}' @format=[columnList.count,'.',rowList.count], resourceType='foundation/components/parsys'}"></div>
+            </sly>
+        </div>
+    </sly>
+</div>

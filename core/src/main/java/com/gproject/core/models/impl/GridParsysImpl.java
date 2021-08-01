@@ -35,10 +35,10 @@ public class GridParsysImpl implements GridParsys {
         int intColumns = Integer.parseInt(columns);
         rowsNumber = new ArrayList<String>();
         colNumber = new ArrayList<String>();
-        for (int i = 0; i < intRows; i++) {
+        for (int i = 1; i <= intRows; i++) {
             rowsNumber.add(rows);
         }
-        for (int i = 0; i < intColumns; i++) {
+        for (int i = 1; i <= intColumns; i++) {
             colNumber.add(columns);
         }
     }
