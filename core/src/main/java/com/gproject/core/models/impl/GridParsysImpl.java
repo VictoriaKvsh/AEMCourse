@@ -12,44 +12,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Model(adaptables = SlingHttpServletRequest.class,
-        adapters = GridParsys.class,
-        defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)  //delete
+        adapters = GridParsys.class)
 public class GridParsysImpl implements GridParsys {
 
-    public List<String> rowsNumber; // private
+    public List<String> rowsNumber;
 
     public List<String> colNumber;
 
     @ValueMapValue
     @Default(values = "1")
-    String rows;                 /// int - numbers
+    private int rows;
 
     @ValueMapValue
     @Default(values = "1")
-    String columns;
+    private int columns;
 
 
     @PostConstruct
     public void init() {
-        int intRows = Integer.parseInt(rows);
-        int intColumns = Integer.parseInt(columns);
-        rowsNumber = new ArrayList<String>();    // in one method
-        colNumber = new ArrayList<String>();
-        for (int i = 1; i <= intRows; i++) {
-            rowsNumber.add(rows);
+        rowsNumber = new ArrayList<>(getList(rows));
+        colNumber = new ArrayList<>(getList(columns));
+
+    }
+
+    private ArrayList getList(int numberOfFields) {
+        ArrayList<String> list = new ArrayList<>();
+        for (int i = 1; i <= numberOfFields; i++) {
+            list.add(String.valueOf(i));
         }
-        for (int i = 1; i <= intColumns; i++) {
-            colNumber.add(columns);
-        }
+        return list;
     }
 
     @Override
-    public String getColumns() {
+    public int getColumns() {
         return columns;
     }
 
     @Override
-    public String getRows() {
+    public int getRows() {
         return rows;
     }
 }
