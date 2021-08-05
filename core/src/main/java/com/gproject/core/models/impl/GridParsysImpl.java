@@ -13,16 +13,16 @@ import java.util.List;
 
 @Model(adaptables = SlingHttpServletRequest.class,
         adapters = GridParsys.class,
-        defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+        defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)  //delete
 public class GridParsysImpl implements GridParsys {
 
-    public List<String> rowsNumber;
+    public List<String> rowsNumber; // private
 
     public List<String> colNumber;
 
     @ValueMapValue
     @Default(values = "1")
-    String rows;
+    String rows;                 /// int - numbers
 
     @ValueMapValue
     @Default(values = "1")
@@ -33,7 +33,7 @@ public class GridParsysImpl implements GridParsys {
     public void init() {
         int intRows = Integer.parseInt(rows);
         int intColumns = Integer.parseInt(columns);
-        rowsNumber = new ArrayList<String>();
+        rowsNumber = new ArrayList<String>();    // in one method
         colNumber = new ArrayList<String>();
         for (int i = 1; i <= intRows; i++) {
             rowsNumber.add(rows);

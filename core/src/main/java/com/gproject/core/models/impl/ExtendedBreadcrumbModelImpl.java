@@ -1,5 +1,6 @@
 package com.gproject.core.models.impl;
 
+import com.adobe.cq.wcm.core.components.models.Breadcrumb;
 import com.adobe.cq.wcm.core.components.models.NavigationItem;
 import com.gproject.core.models.ExtendedBreadcrumbModel;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -23,11 +24,4 @@ public class ExtendedBreadcrumbModelImpl implements ExtendedBreadcrumbModel {
         Collections.reverse(items);
         return Collections.unmodifiableList(items);
     }
-//    @Override
-//    public Collection<NavigationItem> getItems() {
-//        items = (List<NavigationItem>) Breadcrumb.super.getItems();
-//        Collections.reverse(items);
-//        return Collections.unmodifiableList(items);
-//
-//    }
 }
