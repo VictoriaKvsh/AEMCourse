@@ -1,0 +1,10 @@
+.card{
+    display: flex;
+}
+.card-block{
+    width: 50%;
+    height: 150px;
+}
+p {
+    padding: 0px 0px 0px 10px;
+}
