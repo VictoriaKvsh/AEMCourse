@@ -1,0 +1,8 @@
+<div data-sly-use.survey="com.gproject.core.models.Survey">
+    <p>${survey.question}</p>
+    <div data-sly-list.item="${survey.answers}">
+        <p> ${item} </p>
+    </div>
+    <p> ${survey.number} is possible</p>
+
+</div>
