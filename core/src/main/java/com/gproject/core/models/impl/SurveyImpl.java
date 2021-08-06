@@ -31,7 +31,7 @@ public class SurveyImpl implements Survey {
 
     @ValueMapValue
     @Default(values = "1")
-    private String numberofanswers;
+    private int numberofanswers;
 
     @Override
     public String getQuestion() {
@@ -40,7 +40,7 @@ public class SurveyImpl implements Survey {
 
     @Override
     public String getNumber() {
-        switch (Integer.valueOf(numberofanswers)) {
+        switch (numberofanswers) {
             case 1:
                 return "One answer";
             case 2:
