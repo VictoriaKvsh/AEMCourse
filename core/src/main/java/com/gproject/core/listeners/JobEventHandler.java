@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-//@Component(immediate = true)
+@Component(immediate = true)
 public class JobEventHandler implements EventListener {
 
     private static final Logger log = LoggerFactory.getLogger(JobEventHandler.class);

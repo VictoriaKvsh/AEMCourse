@@ -16,12 +16,12 @@ import javax.jcr.Node;
 import javax.jcr.Session;
 import javax.jcr.version.VersionManager;
 
-//@Component(immediate = true,
-//        property = {
-//                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/ADDED",
-//                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/CHANGED",
-//                EventConstants.EVENT_FILTER + "=(path=/content/gproject/us/en/*)"
-//        })
+@Component(immediate = true,
+        property = {
+                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/ADDED",
+                EventConstants.EVENT_TOPIC + "=org/apache/sling/api/resource/Resource/CHANGED",
+                EventConstants.EVENT_FILTER + "=(path=/content/gproject/us/en/*)"
+        })
 public class PageResourseEventHandler implements EventHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(PageResourseEventHandler.class);

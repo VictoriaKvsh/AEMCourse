@@ -32,7 +32,6 @@ public class GridParsysImpl implements GridParsys {
     public void init() {
         rowsNumber = new ArrayList<>(getList(rows));
         colNumber = new ArrayList<>(getList(columns));
-
     }
 
     private ArrayList getList(int numberOfFields) {

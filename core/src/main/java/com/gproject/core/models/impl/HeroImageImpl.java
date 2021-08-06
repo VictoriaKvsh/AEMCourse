@@ -15,24 +15,18 @@ import javax.annotation.PostConstruct;
         defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
 public class HeroImageImpl implements HeroImage {
 
-
-
     @Self
     private SlingHttpServletRequest request;
 
     @ScriptVariable
     private ValueMap properties;
 
-
     private Image image;
 
     @PostConstruct
     private void initModel() {
-
         image = getImage();
     }
-
-
 
     public Image getImage() {
         if (image != null) {
