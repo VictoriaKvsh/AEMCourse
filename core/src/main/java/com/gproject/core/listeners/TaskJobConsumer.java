@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-@Component(immediate = true,
-        property = {
-                JobConsumer.PROPERTY_TOPICS + "=" + JobEventHandler.JOB_CONSUMER_TOPIC
-        })
+//@Component(immediate = true,
+//        property = {
+//                JobConsumer.PROPERTY_TOPICS + "=" + JobEventHandler.JOB_CONSUMER_TOPIC
+//        })
 public class TaskJobConsumer implements JobConsumer {
     private static final String PATH_TO_ADD = "/var/log/removedProperties/deletedNode";
     private static final Logger LOG = LoggerFactory.getLogger(TaskJobConsumer.class);
@@ -26,6 +26,7 @@ public class TaskJobConsumer implements JobConsumer {
     private static final String DELETED_NODE_PROPERTY_NAME = "propertyName";
     private static final String INTERMEDIATE_NODE_TYPE = "sling:Folder";
     private static final String NEW_NODE_TYPE = "nt:unstructured";
+
 
     @Reference
     private ResourceResolverFactory resourceResolverFactory;
@@ -37,6 +38,7 @@ public class TaskJobConsumer implements JobConsumer {
             String deletedNodePath = (String) job.getProperty(SlingConstants.PROPERTY_PATH);
             Node newNode = JcrUtil.createPath(PATH_TO_ADD, true, INTERMEDIATE_NODE_TYPE, NEW_NODE_TYPE, session, false);
             newNode.setProperty(DELETED_NODE_PROPERTY_PATH, deletedNodePath);
+            newNode.setProperty(DELETED_NODE_PROPERTY_NAME, deletedNodePath.substring(deletedNodePath.indexOf("jcr:content")+12));
             session.save();
             LOG.info("\n Job executing for  : {} ", deletedNodePath);
             return JobResult.OK;
